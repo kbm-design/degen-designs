@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DappArchive — Design System Audit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* Exact HSL tokens from src/app/globals.css (:root) */
+      --background: 0 0% 100%;
+      --foreground: 222.2 84% 4.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 222.2 84% 4.9%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 222.2 84% 4.9%;
+      --primary: 222.2 47.4% 11.2%;
+      --primary-foreground: 210 40% 98%;
+      --secondary: 210 40% 96%;
+      --secondary-foreground: 222.2 47.4% 11.2%;
+      --muted: 210 40% 96%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+      --accent: 210 40% 96%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 210 40% 98%;
+      --border: 214.3 31.8% 91.4%;
+      --input: 214.3 31.8% 91.4%;
+      --ring: 222.2 84% 4.9%;
+      --radius: 0.5rem;
+
+      --bg: hsl(var(--background));
+      --fg: hsl(var(--foreground));
+      --muted-bg: hsl(var(--muted));
+      --muted-fg: hsl(var(--muted-foreground));
+      --bd: hsl(var(--border));
+      --pri: hsl(var(--primary));
+      --pri-fg: hsl(var(--primary-foreground));
+      --sec: hsl(var(--secondary));
+      --acc: hsl(var(--accent));
+      --des: hsl(var(--destructive));
+      --card-bg: hsl(var(--card));
+
+      --page-pad: 48px;
+      --max: 1100px;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --sans: Inter, system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--fg);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, hsl(210 40% 96% / 0.9), transparent 60%),
+        radial-gradient(900px 500px at 100% 0%, hsl(214 32% 94% / 0.8), transparent 55%),
+        var(--bg);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+    code, .mono { font-family: var(--mono); font-size: 0.8125rem; }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: var(--page-pad) 24px 96px; }
+
+    header.hero {
+      display: grid;
+      gap: 20px;
+      padding: 32px 0 48px;
+      border-bottom: 1px solid var(--bd);
+      margin-bottom: 48px;
+    }
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted-fg);
+      font-weight: 600;
+    }
+    h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin: 0;
+      font-weight: 700;
+    }
+    .lede {
+      max-width: 62ch;
+      color: var(--muted-fg);
+      font-size: 1.0625rem;
+      margin: 0;
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--bd);
+      background: var(--card-bg);
+      font-size: 12px;
+      color: var(--muted-fg);
+    }
+    .chip strong { color: var(--fg); font-weight: 600; }
+
+    nav.toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 56px;
+    }
+    nav.toc a {
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: calc(var(--radius) - 2px);
+      border: 1px solid var(--bd);
+      background: hsl(var(--background) / 0.8);
+      color: var(--muted-fg);
+    }
+    nav.toc a:hover { color: var(--fg); background: var(--muted-bg); }
+
+    section {
+      margin-bottom: 64px;
+      scroll-margin-top: 24px;
+    }
+    section > h2 {
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      margin: 0 0 8px;
+    }
+    section > .section-desc {
+      color: var(--muted-fg);
+      margin: 0 0 24px;
+      max-width: 70ch;
+    }
+
+    .panel {
+      border: 1px solid var(--bd);
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      overflow: hidden;
+    }
+    .panel-h {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--bd);
+      background: hsl(var(--muted) / 0.45);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted-fg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .panel-b { padding: 20px; }
+
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .swatch {
+      border: 1px solid var(--bd);
+      border-radius: calc(var(--radius) - 2px);
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .swatch .chip-color {
+      height: 72px;
+      border-bottom: 1px solid var(--bd);
+    }
+    .swatch .meta { padding: 10px 12px; }
+    .swatch .name { font-size: 13px; font-weight: 600; }
+    .swatch .token { color: var(--muted-fg); margin-top: 2px; word-break: break-all; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 800px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    table.tok {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    table.tok th, table.tok td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--bd);
+      vertical-align: top;
+    }
+    table.tok th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted-fg);
+      font-weight: 600;
+      background: hsl(var(--muted) / 0.35);
+    }
+    table.tok tr:last-child td { border-bottom: none; }
+    .dot {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      border: 1px solid hsl(0 0% 0% / 0.08);
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+    }
+    .comp-card {
+      border: 1px solid var(--bd);
+      border-radius: calc(var(--radius) - 2px);
+      padding: 14px;
+      background: var(--bg);
+    }
+    .comp-card h3 {
+      margin: 0 0 4px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .comp-card p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted-fg);
+    }
+    .comp-card .path {
+      margin-top: 10px;
+      color: var(--muted-fg);
+    }
+
+    /* Live component previews using the same tokens */
+    .btn-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      padding: 0 16px;
+      border-radius: calc(var(--radius) - 2px);
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid transparent;
+      cursor: default;
+      font-family: inherit;
+    }
+    .btn-default { background: var(--pri); color: var(--pri-fg); }
+    .btn-secondary { background: var(--sec); color: hsl(var(--secondary-foreground)); }
+    .btn-outline { background: var(--bg); border-color: hsl(var(--input)); color: var(--fg); }
+    .btn-ghost { background: transparent; color: var(--fg); }
+    .btn-destructive { background: var(--des); color: hsl(var(--destructive-foreground)); }
+    .btn-sm { height: 36px; padding: 0 12px; font-size: 13px; }
+    .btn-lg { height: 44px; padding: 0 32px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 2px 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-default { background: var(--pri); color: var(--pri-fg); }
+    .badge-secondary { background: var(--sec); color: hsl(var(--secondary-foreground)); }
+    .badge-outline { border-color: var(--bd); color: var(--fg); background: transparent; }
+    .badge-premium { background: #eab308; color: #fff; }
+    .badge-amber { color: #f59e0b; border: none; background: transparent; font-weight: 500; }
+
+    .tabs {
+      display: inline-flex;
+      height: 40px;
+      align-items: center;
+      padding: 4px;
+      border-radius: calc(var(--radius) - 2px);
+      background: var(--muted-bg);
+      color: var(--muted-fg);
+      gap: 2px;
+    }
+    .tab {
+      height: 100%;
+      padding: 0 12px;
+      border-radius: calc(var(--radius) - 4px);
+      font-size: 14px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+    }
+    .tab.active {
+      background: var(--bg);
+      color: var(--fg);
+      box-shadow: 0 1px 2px hsl(0 0% 0% / 0.06);
+    }
+
+    .gallery-mock {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 800px) {
+      .gallery-mock { grid-template-columns: 1fr; }
+    }
+    .sidebar-mock {
+      border: 1px solid var(--bd);
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      padding: 16px;
+    }
+    .sidebar-mock h4 { margin: 0 0 12px; font-size: 15px; }
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: var(--fg);
+    }
+    .check {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid hsl(var(--input));
+      background: var(--bg);
+    }
+    .check.on {
+      background: var(--pri);
+      border-color: var(--pri);
+      box-shadow: inset 0 0 0 2px var(--bg);
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 900px) {
+      .cards { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+    .shot-card {
+      border: 1px solid var(--bd);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--card-bg);
+    }
+    .shot {
+      aspect-ratio: 3 / 4;
+      background:
+        linear-gradient(160deg, #0b1220 0%, #1e293b 40%, #334155 100%);
+      position: relative;
+    }
+    .shot.gmx { background: linear-gradient(160deg, #06141f, #0ea5e9 120%); }
+    .shot.jup { background: linear-gradient(160deg, #1a0b2e, #c084fc 130%); }
+    .shot-label {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      right: 12px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 500;
+      text-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+    }
+    .shot-body { padding: 12px; }
+    .shot-body h5 { margin: 0 0 8px; font-size: 14px; }
+    .shot-body .row { display: flex; flex-wrap: wrap; gap: 4px; }
+
+    .type-scale {
+      display: grid;
+      gap: 16px;
+    }
+    .type-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 16px;
+      align-items: baseline;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--bd);
+    }
+    .type-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .type-meta { font-size: 12px; color: var(--muted-fg); }
+    .t-h1 { font-size: 3rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+    .t-h2 { font-size: 1.875rem; font-weight: 700; letter-spacing: -0.02em; }
+    .t-h3 { font-size: 1.5rem; font-weight: 600; }
+    .t-body { font-size: 1rem; }
+    .t-sm { font-size: 0.875rem; color: var(--muted-fg); }
+    .t-xs { font-size: 0.75rem; color: var(--muted-fg); }
+
+    .radius-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: end; }
+    .radius-box {
+      width: 72px;
+      height: 72px;
+      background: var(--muted-bg);
+      border: 1px solid var(--bd);
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      padding-bottom: 8px;
+      font-size: 11px;
+      color: var(--muted-fg);
+    }
+
+    .callout {
+      border: 1px solid var(--bd);
+      border-left: 3px solid var(--pri);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      background: hsl(var(--muted) / 0.35);
+      margin-top: 16px;
+    }
+    .callout h3 { margin: 0 0 6px; font-size: 14px; }
+    .callout p, .callout li { font-size: 13px; color: var(--muted-fg); margin: 0; }
+    .callout ul { margin: 8px 0 0; padding-left: 18px; }
+    .callout li { margin-bottom: 4px; }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 800px) { .compare { grid-template-columns: 1fr; } }
+    .compare .panel-b ul { margin: 0; padding-left: 18px; color: var(--muted-fg); font-size: 13px; }
+    .compare .panel-b li { margin-bottom: 6px; }
+
+    .adhoc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .adhoc .item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--bd);
+      border-radius: calc(var(--radius) - 2px);
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+    .adhoc .sq {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid hsl(0 0% 0% / 0.08);
+    }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--bd);
+      color: var(--muted-fg);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="eyebrow">DappArchive · Design system audit</div>
+      <h1>Existing design system</h1>
+      <p class="lede">
+        Inventory of tokens, components, and product patterns as implemented today
+        (shadcn/ui + Tailwind + Radix). Goal: baseline for a more neutral chrome so
+        dapp screens and flow tabs carry the color.
+      </p>
+      <div class="meta-row">
+        <span class="chip"><strong>Stack</strong> Next.js 14 · Tailwind 3 · shadcn/ui</span>
+        <span class="chip"><strong>Font</strong> Inter</span>
+        <span class="chip"><strong>Radius</strong> --radius 0.5rem</span>
+        <span class="chip"><strong>Dark tokens</strong> defined, unused in layout</span>
+        <span class="chip"><strong>Source</strong> globals.css · tailwind.config.ts · components/ui</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="Sections">
+      <a href="#tokens">Color tokens</a>
+      <a href="#type">Typography</a>
+      <a href="#radius">Radius &amp; layout</a>
+      <a href="#components">UI components</a>
+      <a href="#patterns">Gallery patterns</a>
+      <a href="#adhoc">Ad-hoc color</a>
+      <a href="#direction">Refresh direction</a>
+      <a href="#libraries">Library options</a>
+    </nav>
+
+    <!-- TOKENS -->
+    <section id="tokens">
+      <h2>Color tokens</h2>
+      <p class="section-desc">
+        Semantic HSL CSS variables from <code>src/app/globals.css</code>, wired through
+        <code>tailwind.config.ts</code> as <code>bg-background</code>, <code>text-muted-foreground</code>, etc.
+        Default shadcn “slate” palette — already mostly neutral, with near-black primary.
+      </p>
+
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-h">
+          <span>Light mode (:root) — active</span>
+          <span class="mono">hsl(H S% L%)</span>
+        </div>
+        <div class="panel-b">
+          <div class="swatch-grid">
+            <div class="swatch"><div class="chip-color" style="background:hsl(var(--background))"></div><div class="meta"><div class="name">background</div><div class="token mono">0 0% 100%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(var(--foreground))"></div><div class="meta"><div class="name">foreground</div><div class="token mono">222.2 84% 4.9%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(var(--card))"></div><div class="meta"><div class="name">card</div><div class="token mono">0 0% 100%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(var(--primary))"></div><div class="meta"><div class="name">primary</div><div class="token mono">222.2 47.4% 11.2%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(var(--primary-foreground))"></div><div class="meta"><div class="name">primary-foreground</div><div class="token mono">210 40% 98%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(var(--secondary))"></div><div class="meta"><div class="name">secondary / muted / accent</div><div class="token mono">210 40% 96%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(var(--muted-foreground))"></div><div class="meta"><div class="name">muted-foreground</div><div class="token mono">215.4 16.3% 46.9%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(var(--border))"></div><div class="meta"><div class="name">border / input</div><div class="token mono">214.3 31.8% 91.4%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(var(--destructive))"></div><div class="meta"><div class="name">destructive</div><div class="token mono">0 84.2% 60.2%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(var(--ring))"></div><div class="meta"><div class="name">ring</div><div class="token mono">222.2 84% 4.9%</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-h">
+          <span>Dark mode (.dark) — defined, not applied in root layout</span>
+          <span class="mono">unused in practice</span>
+        </div>
+        <div class="panel-b">
+          <div class="swatch-grid" style="filter:none">
+            <div class="swatch"><div class="chip-color" style="background:hsl(222.2 84% 4.9%)"></div><div class="meta"><div class="name">background</div><div class="token mono">222.2 84% 4.9%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(210 40% 98%)"></div><div class="meta"><div class="name">foreground</div><div class="token mono">210 40% 98%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(210 40% 98%)"></div><div class="meta"><div class="name">primary</div><div class="token mono">210 40% 98%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(217.2 32.6% 17.5%)"></div><div class="meta"><div class="name">secondary / muted / accent</div><div class="token mono">217.2 32.6% 17.5%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(215 20.2% 65.1%)"></div><div class="meta"><div class="name">muted-foreground</div><div class="token mono">215 20.2% 65.1%</div></div></div>
+            <div class="swatch"><div class="chip-color" style="background:hsl(0 62.8% 30.6%)"></div><div class="meta"><div class="name">destructive</div><div class="token mono">0 62.8% 30.6%</div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TYPE -->
+    <section id="type">
+      <h2>Typography</h2>
+      <p class="section-desc">
+        Root layout loads <code>Inter</code> via <code>next/font/google</code> and applies it on
+        <code>body</code>. No custom type scale in Tailwind — sizes come from utility classes.
+      </p>
+      <div class="panel">
+        <div class="panel-h"><span>Scale in product UI</span><span class="mono">layout.tsx · Inter</span></div>
+        <div class="panel-b type-scale">
+          <div class="type-row">
+            <div class="type-meta mono">text-4xl / 6xl<br/>font-bold</div>
+            <div class="t-h1">Web3 Design Archive</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta mono">text-3xl<br/>font-bold</div>
+            <div class="t-h2">Dapps (12)</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta mono">text-2xl<br/>font-semibold</div>
+            <div class="t-h3">Trading (8)</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta mono">text-base / xl</div>
+            <div class="t-body">Discover curated UI flows from leading Web3 dapps.</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta mono">text-sm<br/>muted</div>
+            <div class="t-sm">24 screens · Exchange · DeFi</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta mono">text-xs<br/>muted</div>
+            <div class="t-xs">Added Aug 12, 2025</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RADIUS -->
+    <section id="radius">
+      <h2>Radius &amp; layout</h2>
+      <p class="section-desc">
+        Single radius token. Container max-width 1400px at 2xl with 2rem padding.
+        Gallery grids are 1 → 2 → 3 columns; screenshot tiles use <code>aspect-[3/4]</code>.
+      </p>
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-h"><span>Border radius</span><span class="mono">--radius: 0.5rem</span></div>
+          <div class="panel-b">
+            <div class="radius-row">
+              <div class="radius-box" style="border-radius:calc(var(--radius) - 4px)">sm</div>
+              <div class="radius-box" style="border-radius:calc(var(--radius) - 2px)">md</div>
+              <div class="radius-box" style="border-radius:var(--radius)">lg</div>
+              <div class="radius-box" style="border-radius:999px;width:72px">full</div>
+            </div>
+            <p class="t-sm" style="margin:16px 0 0">Buttons/inputs use md; cards/sheets use lg; badges use full.</p>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><span>Spacing habits</span></div>
+          <div class="panel-b">
+            <table class="tok">
+              <thead><tr><th>Pattern</th><th>Value</th></tr></thead>
+              <tbody>
+                <tr><td>Page padding</td><td class="mono">px-4 py-8</td></tr>
+                <tr><td>Section gap</td><td class="mono">py-16 · space-y-12</td></tr>
+                <tr><td>Card grid gap</td><td class="mono">gap-6</td></tr>
+                <tr><td>Nav height</td><td class="mono">h-16</td></tr>
+                <tr><td>Filter sidebar</td><td class="mono">w-64</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPONENTS -->
+    <section id="components">
+      <h2>UI component inventory</h2>
+      <p class="section-desc">
+        Sixteen primitives under <code>src/components/ui/</code> — standard shadcn/Radix set.
+        No custom theme package; variants via <code>class-variance-authority</code>.
+      </p>
+
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-h"><span>Button variants</span><span class="mono">button.tsx</span></div>
+        <div class="panel-b">
+          <div class="btn-row" style="margin-bottom:12px">
+            <button class="btn btn-default">Default</button>
+            <button class="btn btn-secondary">Secondary</button>
+            <button class="btn btn-outline">Outline</button>
+            <button class="btn btn-ghost">Ghost</button>
+            <button class="btn btn-destructive">Destructive</button>
+            <button class="btn btn-default" style="text-decoration:underline;background:transparent;color:var(--pri);border:none;height:auto;padding:0">Link</button>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-outline btn-sm">Size sm</button>
+            <button class="btn btn-outline">Default</button>
+            <button class="btn btn-outline btn-lg">Size lg</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-col" style="margin-bottom:16px">
+        <div class="panel">
+          <div class="panel-h"><span>Badges</span><span class="mono">badge.tsx</span></div>
+          <div class="panel-b btn-row">
+            <span class="badge badge-default">default</span>
+            <span class="badge badge-secondary">secondary</span>
+            <span class="badge badge-outline">outline</span>
+            <span class="badge badge-premium">Premium ★</span>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><span>Tabs (primitive present)</span><span class="mono">tabs.tsx</span></div>
+          <div class="panel-b">
+            <div class="tabs">
+              <span class="tab active">All</span>
+              <span class="tab">Onboarding</span>
+              <span class="tab">Trading</span>
+              <span class="tab">Swap</span>
+            </div>
+            <p class="t-sm" style="margin:12px 0 0">
+              Tabs exist but the gallery currently filters via dropdown menus, not tabs.
+              Strong candidate for the neutral refresh (tabs carry category color; chrome stays quiet).
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-grid">
+        <div class="comp-card"><h3>Alert Dialog</h3><p>Confirm destructive actions</p><div class="path mono">alert-dialog.tsx</div></div>
+        <div class="comp-card"><h3>Checkbox</h3><p>Filter sidebar multi-select</p><div class="path mono">checkbox.tsx</div></div>
+        <div class="comp-card"><h3>Dialog</h3><p>Flow viewer modal</p><div class="path mono">dialog.tsx</div></div>
+        <div class="comp-card"><h3>Dropdown Menu</h3><p>Image flow / element filters</p><div class="path mono">dropdown-menu.tsx</div></div>
+        <div class="comp-card"><h3>Input / Textarea</h3><p>Admin forms</p><div class="path mono">input.tsx · textarea.tsx</div></div>
+        <div class="comp-card"><h3>Label</h3><p>Form + filter labels</p><div class="path mono">label.tsx</div></div>
+        <div class="comp-card"><h3>Scroll Area</h3><p>Long filter lists</p><div class="path mono">scroll-area.tsx</div></div>
+        <div class="comp-card"><h3>Select</h3><p>Admin selects</p><div class="path mono">select.tsx</div></div>
+        <div class="comp-card"><h3>Sheet</h3><p>Mobile filter drawer</p><div class="path mono">sheet.tsx</div></div>
+        <div class="comp-card"><h3>Skeleton</h3><p>Loading placeholders</p><div class="path mono">skeleton.tsx</div></div>
+        <div class="comp-card"><h3>Switch</h3><p>Admin toggles</p><div class="path mono">switch.tsx</div></div>
+        <div class="comp-card"><h3>Card</h3><p>Primitive; galleries often use raw bordered divs</p><div class="path mono">card.tsx</div></div>
+      </div>
+    </section>
+
+    <!-- PATTERNS -->
+    <section id="patterns">
+      <h2>Gallery product patterns</h2>
+      <p class="section-desc">
+        Composition used on home + dapp detail. Chrome is bordered cards on white;
+        color shows up mainly in screenshot pixels and a few status accents.
+      </p>
+
+      <div class="panel">
+        <div class="panel-h">
+          <span>Home / dapp gallery sketch</span>
+          <span class="mono">home-page-client · enhanced-image-grid</span>
+        </div>
+        <div class="panel-b">
+          <div class="gallery-mock">
+            <aside class="sidebar-mock">
+              <h4>Filters</h4>
+              <div class="check-row"><span class="check on"></span> DeFi</div>
+              <div class="check-row"><span class="check"></span> NFT</div>
+              <div class="check-row"><span class="check"></span> Gaming</div>
+              <div style="height:12px"></div>
+              <h4>Category</h4>
+              <div class="check-row"><span class="check on"></span> Exchange</div>
+              <div class="check-row"><span class="check"></span> Wallet</div>
+              <div class="check-row"><span class="check"></span> Bridge</div>
+              <div style="margin-top:16px" class="btn-row">
+                <button class="btn btn-default btn-sm" style="width:100%">Apply Filters</button>
+              </div>
+            </aside>
+            <div>
+              <div class="btn-row" style="margin-bottom:12px">
+                <button class="btn btn-outline btn-sm">Filter</button>
+                <span class="badge badge-secondary">Trading ✕</span>
+              </div>
+              <div class="cards">
+                <div class="shot-card">
+                  <div class="shot gmx"><div class="shot-label">GMX · Trade</div></div>
+                  <div class="shot-body">
+                    <h5>Long / Short panel</h5>
+                    <div class="row">
+                      <span class="badge badge-secondary">Exchange</span>
+                      <span class="badge badge-outline">Trading</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="shot-card">
+                  <div class="shot jup"><div class="shot-label">Jupiter · Swap</div></div>
+                  <div class="shot-body">
+                    <h5>Swap route</h5>
+                    <div class="row">
+                      <span class="badge badge-secondary">Exchange</span>
+                      <span class="badge badge-outline">Swap</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="shot-card">
+                  <div class="shot"><div class="shot-label">Generic screen</div></div>
+                  <div class="shot-body">
+                    <h5>Untitled</h5>
+                    <div class="row">
+                      <span class="badge badge-premium">Premium</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <h3>What this means for a “neutral chrome” refresh</h3>
+        <ul>
+          <li>Surfaces already lean slate/white — keep chrome quieter (zinc/neutral, softer borders, less card chrome).</li>
+          <li>Let screenshot content + selected tab/app identity own accent color.</li>
+          <li>Replace heavy primary CTAs on browse surfaces with outline/ghost; reserve filled primary for rare actions.</li>
+          <li>Promote Tabs (or segmented control) for flows so selection state can be the colorful signal.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- AD HOC -->
+    <section id="adhoc">
+      <h2>Ad-hoc color (outside the token set)</h2>
+      <p class="section-desc">
+        These bypass semantic tokens and fight a neutral system. Align or remove in the refresh.
+      </p>
+      <div class="panel">
+        <div class="panel-h"><span>Hard-coded accents found in app code</span></div>
+        <div class="panel-b">
+          <div class="adhoc">
+            <div class="item"><span class="sq" style="background:#22c55e"></span><div><strong>Clerk primary</strong><br/><span class="mono">#22c55e</span> · ClerkProviders</div></div>
+            <div class="item"><span class="sq" style="background:#eab308"></span><div><strong>Premium badge</strong><br/><span class="mono">yellow-500</span> · enhanced-image-grid</div></div>
+            <div class="item"><span class="sq" style="background:#f59e0b"></span><div><strong>Admin nav</strong><br/><span class="mono">amber-500</span> · Navbar</div></div>
+            <div class="item"><span class="sq" style="background:#2563eb"></span><div><strong>Admin buttons</strong><br/><span class="mono">blue-600</span> · AdminImageUploader</div></div>
+            <div class="item"><span class="sq" style="background:#9ca3af"></span><div><strong>Broken image</strong><br/><span class="mono">text-gray-400</span> · image grid</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIRECTION -->
+    <section id="direction">
+      <h2>Recommended refresh direction</h2>
+      <p class="section-desc">
+        Not implementing yet — design intent for the gallery chrome so apps and tabs carry color.
+      </p>
+      <div class="compare">
+        <div class="panel">
+          <div class="panel-h"><span>Today</span></div>
+          <div class="panel-b">
+            <ul>
+              <li>shadcn slate defaults; near-black filled primary</li>
+              <li>Every tile is a bordered card + hover shadow</li>
+              <li>Flow filtering via dropdown, not tabs</li>
+              <li>Inter everywhere; no brand type voice</li>
+              <li>Clerk green ≠ app primary (slate)</li>
+              <li>Dark tokens unused</li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><span>Target (neutral gallery)</span></div>
+          <div class="panel-b">
+            <ul>
+              <li>Zinc/neutral token set; primary = foreground ink, not brand hue</li>
+              <li>Quieter tiles: hairline borders or gap-only; no competing chrome color</li>
+              <li>Flow tabs / segmented control as the colorful selection layer</li>
+              <li>Optional: app accent from logo/metadata for active dapp context</li>
+              <li>Unify Clerk + status accents into semantic tokens</li>
+              <li>Keep screenshots full-bleed in tile; metadata secondary</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIBRARIES -->
+    <section id="libraries">
+      <h2>Library options (audit notes)</h2>
+      <p class="section-desc">
+        Comparison for generating a better gallery layout without a full rewrite.
+      </p>
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-b" style="padding:0">
+          <table class="tok">
+            <thead>
+              <tr>
+                <th>Option</th>
+                <th>Fit</th>
+                <th>Cost / risk</th>
+                <th>Verdict</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Stay on shadcn + retoken</strong><br/><span class="mono">current</span></td>
+                <td>Already installed; Tabs, Sheet, Badge cover gallery needs</td>
+                <td>Low — swap CSS vars + a few patterns</td>
+                <td><strong>Best first move</strong></td>
+              </tr>
+              <tr>
+                <td><strong>shadcn registry variants</strong><br/><span class="t-sm">e.g. new-york, zinc base</span></td>
+                <td>Same API; fresher defaults / denser controls</td>
+                <td>Low–medium re-gen of components</td>
+                <td>Good if regenerating ui/</td>
+              </tr>
+              <tr>
+                <td><strong>Astryx</strong><br/><span class="mono">astryx.atmeta.com</span></td>
+                <td>Rich layout, Tab List, Segmented Control, App Shell, Layer primitives</td>
+                <td>High — new dependency, different patterns, Meta-oriented system</td>
+                <td>Reference layouts; adopt selectively</td>
+              </tr>
+              <tr>
+                <td><strong>Other kits</strong><br/><span class="t-sm">Origin UI, Magic UI, Catalyze</span></td>
+                <td>Gallery/masonry/marketing blocks</td>
+                <td>Medium — cherry-pick, don’t swap whole system</td>
+                <td>Use for specific blocks only</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="callout">
+        <h3>Proposed next steps</h3>
+        <ul>
+          <li>Lock a neutral token sheet (zinc) in Paper + this HTML as source of truth.</li>
+          <li>Redesign dapp gallery chrome: tabs for flows, quieter cards, screenshot-first.</li>
+          <li>Borrow Astryx ideas (Segmented Control, App Shell density) without migrating the whole kit.</li>
+          <li>Implement token + gallery layout changes in a follow-up PR.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      Generated from the live codebase · sources:
+      <code>src/app/globals.css</code>,
+      <code>tailwind.config.ts</code>,
+      <code>src/components/ui/*</code>,
+      <code>src/components/dapp/*</code>,
+      <code>src/components/Navbar.tsx</code>,
+      <code>src/components/ClerkProviders.tsx</code>.
+      Paper target: <code>app.paper.design/file/01M09TDQHD1CKN5REW3HJMJQP3/3-1</code>
+    </footer>
+  </div>
+</body>
+</html>
